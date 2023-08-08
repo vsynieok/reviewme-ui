@@ -20,7 +20,7 @@ import { computed, onMounted, onUnmounted, ref } from "vue";
 import ReviewCard from "./ReviewCard.vue";
 
 const reviewsArr = ref<Review[]>([]);
-const cards = ref<InstanceType<typeof ReviewCard>[]>([]);
+const cardRefs = ref<InstanceType<typeof ReviewCard>[]>([]);
 const container = ref<HTMLDivElement>();
 const isLoading = ref(true);
 
@@ -40,6 +40,17 @@ const reviews = computed({
   set: (value) => {
     reviewsArr.value = value;
   },
+});
+
+const cards = computed(() => {
+  let cardlist = [...cardRefs.value];
+
+  cardlist.sort(
+    (a, b) =>
+      new Date(a.review.lastModified as string).getTime() -
+      new Date(b.review.lastModified as string).getTime()
+  );
+  return cardlist;
 });
 
 const _scrollingIntervalIdPool = ref<number[]>([]);

@@ -1,37 +1,35 @@
 <template>
-  <h1>Залиште відгук</h1>
-  <h2>Нам дуже важлива Ваша думка 🤗</h2>
-  <ReviewForm @on-review-sent="handleNewReview" />
-  <ReviewsList ref="reviewsList" />
-  <RouterLink class="more-reviews" to="/reviews">Всі відгуки ➔</RouterLink>
+  <RouterView></RouterView>
 </template>
 
-<script setup lang="ts">
-import { ref } from "vue";
-import ReviewForm from "./components/ReviewForm/ReviewForm.vue";
-import ReviewsList from "./components/ReviewsList/ReviewsList.vue";
-import Review from "./api/models/Review";
-
-const reviewsList = ref<InstanceType<typeof ReviewsList>>();
-
-const handleNewReview = (review: Review) => {
-  reviewsList.value?.addReview(review);
-};
-</script>
+<script setup lang="ts"></script>
 
 <style>
 @import url("https://fonts.googleapis.com/css2?family=Victor+Mono&display=swap");
 
 ::selection {
-  color: white;
+  color: white !important;
   background: var(--theme-color-black);
+}
+
+::-webkit-scrollbar {
+  background: none;
+  width: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--theme-color-black);
 }
 
 body {
   --theme-color-black: #2c3e50;
+  --theme-color-black-opaque: rgba(44, 62, 80, 0.3);
   --theme-color-gray: #7a8794;
   --theme-color-light-gray: #a5b0bb;
   --theme-color-background: #e1e8ee;
+  --theme-color-background-opaque: rgba(225, 232, 238, 0.6);
+  --theme-color-highlight: #f5f6f8;
+
   background-color: var(--theme-color-background);
 }
 
@@ -58,27 +56,6 @@ h2 {
   text-align: center;
   color: var(--theme-color-black);
   margin-top: 60px;
-}
-
-.more-reviews {
-  display: block;
-  text-align: left;
-
-  position: absolute;
-  width: min-content;
-  right: 0;
-  margin-right: 150px;
-  margin-top: 30px;
-
-  font-size: 40px;
-  line-height: 45px;
-
-  text-decoration: none;
-  font-weight: 400;
-  color: var(--theme-color-black);
-}
-
-.more-reviews:hover {
-  text-decoration: underline;
+  height: 100%;
 }
 </style>

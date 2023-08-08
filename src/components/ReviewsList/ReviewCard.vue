@@ -1,10 +1,20 @@
 <template>
-  <div class="reviews-list__card">
-    <span class="name">{{ review.name }}</span>
+  <div class="reviews-list__card" @click="(evt) => emit('click', evt)">
+    <span class="name">Lorem ipsum dolor sit amet, consectetur tincidunt.</span>
     <span class="date">
-      {{ new Date(review.lastModified ?? "").toLocaleDateString() }}
+      {{ new Date((review.lastModified as string) + "Z").toLocaleDateString() }}
     </span>
-    <p class="comment">{{ review.comment }}</p>
+    <p v-if="isCommentOverflowing" class="overflowing-mask"></p>
+    <p
+      class="comment"
+      ref="comment"
+      :class="{ overflowing: isCommentOverflowing }"
+    >
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam ac ipsum
+      suscipit, sollicitudin nisl eget, bibendum ex. Maecenas tincidunt est in
+      malesuada commodo. Phasellus id nulla tortor. Donec ligula orci, euismod
+      vel accumsan quis, porttitor nulla.
+    </p>
 
     <ReviewsListRating :rating="review.rating" />
   </div>
@@ -13,9 +23,18 @@
 <script setup lang="ts">
 import Review from "@/api/models/Review";
 import ReviewsListRating from "./ReviewsListRating.vue";
+import { computed, ref } from "vue";
+
+const comment = ref<HTMLParagraphElement>();
+
+const isCommentOverflowing = computed(
+  () =>
+    comment.value && comment.value?.scrollHeight > comment.value?.clientHeight
+);
 
 // eslint-disable-next-line
 const props = defineProps<{ review: Review }>();
+const emit = defineEmits({ click: (evt: MouseEvent) => evt });
 </script>
 
 <style scoped>
@@ -44,7 +63,7 @@ const props = defineProps<{ review: Review }>();
   font-style: italic;
   font-size: 14px;
   margin: 10px 0 0 0;
-  height: 100px;
+  height: 90px;
 
   overflow: hidden;
   -webkit-box-orient: vertical;
@@ -54,5 +73,15 @@ const props = defineProps<{ review: Review }>();
   font-size: 15px;
   margin-left: 10px;
   opacity: 0.8;
+}
+
+.overflowing {
+  background: linear-gradient(
+    var(--theme-color-black) 0%,
+    var(--theme-color-black) 60%,
+    white
+  );
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 </style>
