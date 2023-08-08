@@ -1,5 +1,6 @@
 <template>
   <h1>Всі відгуки</h1>
+  <RouterLink class="home-link" to="/">↼ Назад</RouterLink>
   <div
     class="reviews-container"
     ref="container"
@@ -37,7 +38,7 @@
 
 <script setup lang="ts">
 import ReviewCard from "@/components/ReviewsList/ReviewCard.vue";
-import { computed, onMounted, ref, watch } from "vue";
+import { onMounted, ref } from "vue";
 import EntitySet from "@/api/models/EntitySet";
 import Review from "@/api/models/Review";
 import { getByPage } from "@/api/reviews";
@@ -78,6 +79,21 @@ const handlePageChange = async (p: number) => {
 h1 {
   font-size: 30px;
 }
+
+.home-link {
+  text-decoration: none;
+  color: var(--theme-color-black);
+  position: absolute;
+  bottom: 40px;
+  left: 50px;
+  font-size: 20px;
+}
+
+.home-link:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
 .reviews-container {
   position: relative;
   width: 100%;
@@ -140,6 +156,20 @@ h1 {
 @media screen and (max-width: 1280px) {
   .reviews-container {
     height: calc(82vh - 140px);
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .home-link {
+    width: max-content;
+    height: min-content;
+    padding: 4px 6px;
+    top: 20px;
+    left: 25px;
+
+    font-size: 15px;
+    background-color: var(--theme-color-black);
+    color: white;
   }
 }
 </style>

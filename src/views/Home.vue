@@ -26,7 +26,7 @@ const handleNewReview = (review: Review) => {
 
   position: absolute;
   right: 100px;
-  margin-top: 50px;
+  bottom: 60px;
 
   font-size: 40px;
   line-height: 45px;
@@ -51,7 +51,8 @@ const handleNewReview = (review: Review) => {
     left: 50%;
     transform: translate(-50%);
     padding: 4px 6px;
-    margin-block: 50px;
+    margin-block: 40px;
+    bottom: 5px;
 
     line-height: normal;
     text-align: center;

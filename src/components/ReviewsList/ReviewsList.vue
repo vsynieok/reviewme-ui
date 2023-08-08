@@ -8,6 +8,7 @@
         v-for="review in reviews"
         :key="review.id"
         :review="review"
+        @vue:mounted="scrollThroughCards()"
       />
     </div>
   </div>
@@ -18,9 +19,10 @@ import Review from "@/api/models/Review";
 import { getByPage } from "@/api/reviews";
 import { computed, onMounted, onUnmounted, ref } from "vue";
 import ReviewCard from "./ReviewCard.vue";
+import config from "@/constants/config";
 
 const reviewsArr = ref<Review[]>([]);
-const cardRefs = ref<InstanceType<typeof ReviewCard>[]>([]);
+const cards = ref<InstanceType<typeof ReviewCard>[]>([]);
 const container = ref<HTMLDivElement>();
 const isLoading = ref(true);
 
@@ -28,52 +30,50 @@ const isLoading = ref(true);
 // to create an infinite scroll loop effect
 const reviews = computed({
   get: () => {
-    let newReviews: Review[] = [];
-    newReviews = reviewsArr.value.slice(-1, 1);
-    newReviews = [...newReviews, ...reviewsArr.value];
-    newReviews = [...newReviews, ...reviewsArr.value.slice(0, 3)];
-    newReviews.forEach((r, i) => {
-      newReviews[i] = { ...r, id: String(Math.floor(Math.random() * 100)) };
+    let data = [...reviewsArr.value];
+    data.sort(
+      (b, a) =>
+        new Date(a.lastModified as string).getTime() -
+        new Date(b.lastModified as string).getTime()
+    );
+    data = [data.at(-1) as Review, ...data, ...data.slice(0, 2)];
+
+    data.forEach((r, i) => {
+      data[i] = {
+        ...r,
+        id: r.id + String(Math.floor(Math.random() * 100)),
+      };
     });
-    return newReviews;
+    console.log(data);
+    return data;
   },
   set: (value) => {
     reviewsArr.value = value;
   },
 });
 
-const cards = computed(() => {
-  let cardlist = [...cardRefs.value];
-
-  cardlist.sort(
-    (a, b) =>
-      new Date(a.review.lastModified as string).getTime() -
-      new Date(b.review.lastModified as string).getTime()
-  );
-  return cardlist;
-});
-
-const _scrollingIntervalIdPool = ref<number[]>([]);
+const _scrollingIntervalId = ref<number>(0);
 
 onMounted(async () => {
   await fetchPreviewReviews();
 });
 
 onUnmounted(() => {
-  _scrollingIntervalIdPool.value.forEach((id) => clearInterval(id));
+  clearInterval(_scrollingIntervalId.value);
 });
 
 const addReview = (review: Review) => {
-  _scrollingIntervalIdPool.value.forEach((id) => clearInterval(id));
-
-  reviewsArr.value = [review, ...reviewsArr.value.slice(0, -1)];
-  scrollContainerToChild(cards.value[1].$el, "smooth");
+  reviewsArr.value = [
+    review,
+    ...reviewsArr.value.slice(0, reviewsArr.value.length - 1),
+  ];
   scrollThroughCards();
 };
 
 const fetchPreviewReviews = async () => {
   try {
-    reviewsArr.value = (await getByPage(1, 5))?.items ?? [];
+    reviewsArr.value =
+      (await getByPage(1, config.MAX_REVIEWS_ON_PREVIEW))?.items ?? [];
     isLoading.value = false;
   } catch {
     isLoading.value = true; // don't show anything
@@ -81,25 +81,22 @@ const fetchPreviewReviews = async () => {
 };
 
 const scrollThroughCards = (interval = 5) => {
-  _scrollingIntervalIdPool.value.forEach((id) => clearInterval(id));
+  clearInterval(_scrollingIntervalId.value);
+
+  scrollContainerToChild(cards.value[1].$el, "instant");
 
   var idx = 2;
-
-  let sortedCards = [...cards.value];
-  sortedCards.sort((c) =>
-    new Date(c.review.lastModified as string).getUTCMilliseconds()
-  );
 
   const intervalId = setInterval(() => {
     if (idx === cards.value.length - 1) idx = 1;
     scrollContainerToChild(
-      sortedCards[idx].$el,
+      cards.value[idx].$el,
       idx === 1 ? "instant" : "smooth"
     );
     idx++;
   }, interval * 1000);
 
-  _scrollingIntervalIdPool.value.push(intervalId);
+  _scrollingIntervalId.value = intervalId;
 };
 
 const scrollContainerToChild = (
