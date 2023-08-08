@@ -89,6 +89,7 @@ h1 {
   grid-template-rows: min-content;
   gap: 30px;
   justify-content: center;
+  align-items: center;
 
   scroll-behavior: smooth;
   scroll-snap-type: y mandatory;
@@ -124,7 +125,7 @@ h1 {
 @media screen and (max-width: 1120px) {
   .reviews-container {
     grid-template-columns: 100%;
-    grid-template-rows: min-content;
+    grid-template-rows: auto;
     overflow-y: scroll;
     width: clamp(300px, 70%, 500px);
     height: calc(82vh - 110px);

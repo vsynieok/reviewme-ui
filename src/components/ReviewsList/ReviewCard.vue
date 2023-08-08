@@ -1,6 +1,6 @@
 <template>
   <div class="reviews-list__card" @click="(evt) => emit('click', evt)">
-    <span class="name">Lorem ipsum dolor sit amet, consectetur tincidunt.</span>
+    <span class="name">{{ review.name }}</span>
     <span class="date">
       {{ new Date((review.lastModified as string) + "Z").toLocaleDateString() }}
     </span>
@@ -10,10 +10,7 @@
       ref="comment"
       :class="{ overflowing: isCommentOverflowing }"
     >
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam ac ipsum
-      suscipit, sollicitudin nisl eget, bibendum ex. Maecenas tincidunt est in
-      malesuada commodo. Phasellus id nulla tortor. Donec ligula orci, euismod
-      vel accumsan quis, porttitor nulla.
+      {{ review.comment }}
     </p>
 
     <ReviewsListRating :rating="review.rating" />
@@ -42,6 +39,7 @@ const emit = defineEmits({ click: (evt: MouseEvent) => evt });
   box-sizing: border-box;
   padding: 20px;
   width: 100%;
+  height: min-content;
 
   background-color: white;
   border: 2px var(--theme-color-light-gray) solid;
