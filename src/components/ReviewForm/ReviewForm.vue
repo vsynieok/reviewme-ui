@@ -6,7 +6,7 @@
           :class="{ 'invalid-field': isFieldInvalid('name') }"
           type="text"
           placeholder="Ваше ім'я"
-          maxlength="255"
+          maxlength="30"
           v-model="name"
           :disabled="areFieldsDisabled"
         />
@@ -30,7 +30,10 @@
         Залишити відгук
       </button>
     </form>
-    <ReviewSubmitted v-if="isSubmitted" />
+    <ReviewSubmitted
+      :type="isSubmitFailed ? 'error' : 'success'"
+      v-if="isSubmitted"
+    />
   </div>
 </template>
 
@@ -47,9 +50,10 @@ const comment = ref("");
 const errors = ref<string[]>([]);
 const isLoading = ref(false);
 const isSubmitted = ref(false);
+const isSubmitFailed = ref(false);
 
 const emit = defineEmits({
-  onReviewSubmitted(review: Review) {
+  onReviewSent(review: Review) {
     return review;
   },
 });
@@ -92,12 +96,11 @@ const submitReview = async () => {
     });
     if (!newReview) throw new Error();
 
-    isSubmitted.value = true;
-    emit("onReviewSubmitted", newReview);
+    emit("onReviewSent", newReview);
   } catch {
-    console.log("oopsie!");
-    // TODO: send notification
+    isSubmitFailed.value = true;
   } finally {
+    isSubmitted.value = true;
     isLoading.value = false;
   }
 };
@@ -105,15 +108,17 @@ const submitReview = async () => {
 
 <style scoped>
 .review-form {
+  box-sizing: border-box;
   position: relative;
-  width: clamp(200px, 70%, 600px);
+  width: clamp(300px, 70%, 600px);
   height: max-content;
   margin: auto;
 
   background-color: white;
 
-  border-radius: 30px;
-  box-shadow: 0px 20px 35px -15px rgba(44, 62, 80, 0.3);
+  box-shadow: 10px 10px var(--theme-color-black);
+  border: 2px var(--theme-color-black) solid;
+  z-index: 3;
 }
 
 .review-form__header {
@@ -134,8 +139,8 @@ form button[type="submit"]:disabled:hover {
   width: 100%;
   padding: 5px 10px;
 
-  background-color: #a5b0bb;
-  border: 1px #a5b0bb solid;
+  background-color: var(--theme-color-light-gray);
+  border: 1px var(--theme-color-light-gray) solid;
 
   font: inherit;
   font-size: 15px;
@@ -151,8 +156,8 @@ form button[type="submit"]:focus {
 form button[type="submit"]:hover {
   cursor: pointer;
   background-color: white;
-  color: #2c3e50;
-  border: 1px #2c3e50 solid;
+  color: var(--theme-color-black);
+  border: 1px var(--theme-color-black) solid;
   transition: all 0.05s ease-in;
 }
 
@@ -177,9 +182,9 @@ input {
   font: inherit;
   font-size: 15px;
 
-  border: 1px #a5b0bb solid;
+  border: 1px var(--theme-color-light-gray) solid;
   transition: border 0.2s ease-in;
-  color: #2c3e50;
+  color: var(--theme-color-black);
 }
 
 textarea {
@@ -196,25 +201,31 @@ textarea {
   font: inherit;
   font-size: 15px;
 
-  border: 1px #a5b0bb solid;
+  border: 1px var(--theme-color-light-gray) solid;
   transition: border 0.2s ease-in;
 
-  color: #2c3e50;
+  color: var(--theme-color-black);
 }
 
 input::placeholder,
 textarea::placeholder {
-  color: #a5b0bb;
+  color: var(--theme-color-light-gray);
 }
 
 input:focus,
 textarea:focus {
   outline: none;
-  border: 1px #2c3e50 solid;
+  border: 1px var(--theme-color-black) solid;
 }
 
 .invalid-field {
   border: 1px red solid !important;
   transition: all 0.1s ease-in;
+}
+
+@media screen and (max-width: 600px) {
+  .review-form__header {
+    flex-direction: column;
+  }
 }
 </style>

@@ -1,11 +1,13 @@
 <template>
   <div class="message-box">
-    <div class="message-box__icon">🙌</div>
-    Дякуємо за Ваш час!
+    <div class="message-box__icon">{{ type === "success" ? "🙌" : "😖" }}</div>
+    {{ type === "success" ? "Дякуємо за Ваш час!" : "Щось пішло не так..." }}
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+const props = defineProps<{ type: "error" | "success" }>();
+</script>
 
 <style scoped>
 .message-box {
