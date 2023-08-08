@@ -14,6 +14,7 @@
 import Review from "@/api/models/Review";
 import ReviewsListRating from "./ReviewsListRating.vue";
 
+// eslint-disable-next-line
 const props = defineProps<{ review: Review }>();
 </script>
 

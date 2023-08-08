@@ -16,7 +16,7 @@
 <script setup lang="ts">
 import Review from "@/api/models/Review";
 import { getByPage } from "@/api/reviews";
-import { computed, onMounted, onUnmounted, ref, watch, watchEffect } from "vue";
+import { computed, onMounted, onUnmounted, ref } from "vue";
 import ReviewCard from "./ReviewCard.vue";
 
 const reviewsArr = ref<Review[]>([]);
