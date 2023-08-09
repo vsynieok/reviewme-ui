@@ -1,8 +1,7 @@
-import config from "@/constants/config";
 import Review from "./models/Review";
 import EntitySet from "./models/EntitySet";
 
-const REVIEWS_API = `${process.env.API_BASE_URL}/api/reviews`;
+const REVIEWS_API = `${process.env.VUE_APP_API_BASE}/api/reviews`;
 
 export async function getByPage(page: number, limit: number) {
   const req = await fetch(`${REVIEWS_API}?page=${page}&limit=${limit}`);
