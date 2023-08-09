@@ -1,24 +1,13 @@
-# reviewme-ui
+# About
+The front-end part of the ReviewMe project.
 
-## Project setup
+* Written in TypeScript using Vue framework
+* Pure CSS for styling
+
+# Building and running
 ```
 npm install
-```
-
-### Compiles and hot-reloads for development
-```
+&&
 npm run serve
 ```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+Alternatively, the Dockerfile could be used, which makes a production build and runs it on a NGINX server in a container.
