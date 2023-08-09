@@ -44,6 +44,7 @@ import Review from "@/api/models/Review";
 import { getByPage } from "@/api/reviews";
 import ReviewModal from "@/components/ReviewModal.vue";
 import Pagination from "@/components/Pagination.vue";
+import config from "@/constants/config";
 
 const reviews = ref<EntitySet<Review>>();
 const detailedReview = ref<Review>();
@@ -61,7 +62,7 @@ onMounted(async () => {
 const fetchData = async (page = 1) => {
   isLoading.value = true;
   try {
-    reviews.value = await getByPage(page, 6);
+    reviews.value = await getByPage(page, config.MAX_REVIEWS_ON_PAGE);
   } catch {
     console.log("oopsie!");
   } finally {
