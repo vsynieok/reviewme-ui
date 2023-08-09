@@ -44,7 +44,6 @@ const reviews = computed({
         id: r.id + String(Math.floor(Math.random() * 100)),
       };
     });
-    console.log(data);
     return data;
   },
   set: (value) => {

@@ -63,10 +63,9 @@ const fetchData = async (page = 1) => {
   isLoading.value = true;
   try {
     reviews.value = await getByPage(page, config.MAX_REVIEWS_ON_PAGE);
-  } catch {
-    console.log("oopsie!");
-  } finally {
     isLoading.value = false;
+  } catch {
+    isLoading.value = true;
   }
 };
 
